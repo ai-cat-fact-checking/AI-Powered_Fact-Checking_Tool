@@ -1,0 +1,28 @@
+{
+  "scripts": {
+    "prettier": "npx prettier --write .",
+    "lint": "eslint extension/js/config.js extension/js/chat.js extension/js/utils.js",
+    "lint:fix": "npm run lint -- --fix",
+    "validate": "docker-compose config --quiet && npm run lint",
+    "deploy:test": "./deploy/auto-deploy.sh --dry-run",
+    "deploy:logs": "tail -f logs/auto-deploy.log",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "extension/js/**/*.js": "eslint --fix",
+    "*.yml": "prettier --write"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.24.0",
+    "@types/chrome": "^0.0.315",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "prettier": "3.5.3"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.3",
+    "firebase": "^11.6.1"
+  }
+}

@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: fact-check-postgres
+    env_file:
+      - ./server/.env
+    environment:
+      POSTGRES_DB: fact_check
+      POSTGRES_USER: fact_check_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U fact_check_user -d fact_check']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  api:
+    build:
+      context: ./server
+      dockerfile: docker/Dockerfile
+    container_name: fact-check-api
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    env_file:
+      - ./server/.env
+    environment:
+      # Override database host for Docker network
+      DATABASE_URL: postgresql://fact_check_user:${DB_PASSWORD}@postgres:5432/fact_check
+      DB_HOST: postgres
+    ports:
+      - '4999:4999'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

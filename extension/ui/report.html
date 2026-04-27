@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>新聞事實查核報告</title>
+    <link rel="stylesheet" href="../css/report.css" />
+  </head>
+  <body>
+    <div class="report-container">
+      <header>
+        <div class="report-header">
+          <h1>新聞事實查核報告</h1>
+          <div class="report-meta">
+            <div id="report-date">報告生成日期：<span></span></div>
+            <div id="report-url">
+              新聞網址：<a href="#" target="_blank"></a>
+            </div>
+            <div id="report-title">新聞標題：<span></span></div>
+          </div>
+        </div>
+      </header>
+
+      <div class="loading-container" id="loading">
+        <div class="spinner"></div>
+        <p>載入報告中...</p>
+      </div>
+
+      <div id="error-message" class="error-message hidden"></div>
+
+      <main id="report-content" class="hidden">
+        <section class="report-section">
+          <h2>綜合評估</h2>
+          <div id="overall-assessment" class="assessment-box">
+            <div class="assessment-level">
+              <div id="assessment-level-indicator" class="level-indicator">
+                <span class="level-text">尚未評估</span>
+              </div>
+            </div>
+            <div id="assessment-comment" class="assessment-comment">
+              尚未進行評估
+            </div>
+          </div>
+        </section>
+
+        <section class="report-section">
+          <h2>網域認證</h2>
+          <div class="domain-info-container">
+            <div class="domain-header">
+              <span class="domain-label">網域：</span>
+              <span id="domain-value"></span>
+              <span id="domain-verified" class="tag verified hidden"
+                >已驗證</span
+              >
+              <span id="domain-unverified" class="tag unverified hidden"
+                >未驗證</span
+              >
+              <span id="domain-unknown" class="tag unknown hidden">未知</span>
+            </div>
+            <div id="domain-org-name" class="domain-org-name hidden"></div>
+            <div id="domain-summary" class="domain-summary hidden"></div>
+            <details id="domain-details" class="domain-details hidden">
+              <summary>顯示更多資訊</summary>
+              <div class="domain-details-content">
+                <div
+                  id="domain-description"
+                  class="domain-description hidden"
+                ></div>
+                <div id="domain-meta" class="domain-meta hidden">
+                  <span id="domain-category" class="domain-tag"></span>
+                  <span id="domain-country" class="domain-tag"></span>
+                  <span
+                    id="domain-stance"
+                    class="domain-tag stance hidden"
+                  ></span>
+                </div>
+                <div
+                  id="domain-credibility-notes"
+                  class="domain-credibility-notes hidden"
+                ></div>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="report-section">
+          <h2>記者/媒體觀點摘要</h2>
+          <div class="summary-box">
+            <p id="opinions-summary">
+              本文包含 <span class="highlight-count">0</span> 個觀點，其中有
+              <span class="highlight-count">0</span> 個有論據佐證。
+            </p>
+          </div>
+          <div id="opinions-container" class="tree-container"></div>
+        </section>
+
+        <section class="report-section">
+          <h2>事實檢核</h2>
+          <div class="summary-box">
+            <p id="arguments-summary">
+              本文包含 <span class="highlight-count">0</span> 個事實陳述，共有
+              <span class="highlight-count">0</span> 個來源佐證。
+            </p>
+            <div id="fact-stats" class="fact-stats">
+              <div class="stat-item correct">正確 <span>0</span></div>
+              <div class="stat-item incorrect">錯誤 <span>0</span></div>
+              <div class="stat-item unverified">未驗證 <span>0</span></div>
+            </div>
+          </div>
+          <div id="arguments-container" class="tree-container"></div>
+        </section>
+
+        <section class="report-section">
+          <h2>中國用語檢測</h2>
+          <div class="summary-box">
+            <p id="chinese-terms-summary">
+              本文包含 <span class="highlight-count">0</span> 個疑似中國用語。
+            </p>
+          </div>
+          <div id="chinese-terms-container"></div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="report-footer">
+          <p>本報告由 AI 輔助生成，僅供參考。請自行判斷資訊的準確性。</p>
+          <div class="report-actions">
+            <button id="print-report" class="btn">列印報告</button>
+            <button id="export-pdf" class="btn">匯出 PDF</button>
+            <button id="close-report" class="btn">關閉報告</button>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script src="../js/report.js"></script>
+    <script src="../lib/purify.min.js"></script>
+  </body>
+</html>

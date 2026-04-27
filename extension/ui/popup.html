@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>新聞事實查核</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>喵查查．識讀任務中……</p>
+      </div>
+
+      <div id="error-message" class="error-message hidden"></div>
+
+      <div id="analysis-results" class="hidden">
+        <div class="section credibility-section">
+          <h2>綜合評估</h2>
+          <div id="popup-assessment" class="assessment-indicator">
+            <span id="assessment-level-text">尚未評估</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>網域認證</h2>
+          <div class="domain-info-container">
+            <div class="domain-header">
+              <span id="domain-value">-</span>
+              <span id="domain-verified" class="tag verified hidden"
+                >已驗證</span
+              >
+              <span id="domain-unverified" class="tag unverified hidden"
+                >未驗證</span
+              >
+              <span id="domain-unknown" class="tag unknown hidden">未知</span>
+            </div>
+            <div id="domain-org-name" class="domain-org-name hidden"></div>
+            <div id="domain-summary" class="domain-summary hidden"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>記者/媒體觀點</h2>
+          <div id="opinions-container" class="tree-container"></div>
+        </div>
+
+        <div class="section">
+          <h2>相關論據</h2>
+          <div id="arguments-container" class="tree-container"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h2>中國用語</h2>
+            <div class="info-wrapper">
+              <button
+                id="chinese-terms-info-btn"
+                class="btn icon-btn info-btn"
+                aria-label="中國用語資料授權說明"
+                title="中國用語資料授權說明"
+              >
+                i
+              </button>
+              <div
+                id="chinese-terms-tooltip"
+                role="tooltip"
+                class="tooltip hidden"
+              >
+                本工具由「台灣數位外交協會」開發；「中國用語」偵測功能使用中華文化總會之「中華語文知識庫」資料，
+                並以取得 <strong>中華文化總會授權使用</strong>。<br />
+                授權僅限於本工具之媒體識讀與事實查核相關研究與應用，使用者不得將該資料庫內容另作其他用途。
+              </div>
+            </div>
+          </div>
+          <div id="chinese-terms-container"></div>
+        </div>
+
+        <div class="actions">
+          <button id="modify-btn" class="btn">修改</button>
+          <button id="re-analyze-btn" class="btn btn-primary">進階分析</button>
+          <button id="open-report-btn" class="btn btn-secondary">
+            完整報告
+          </button>
+        </div>
+      </div>
+
+      <div id="edit-form" class="hidden">
+        <div class="section">
+          <h2>記者/媒體觀點</h2>
+          <div id="edit-opinions"></div>
+          <button id="add-opinion-btn" class="btn btn-small">+ 新增觀點</button>
+        </div>
+
+        <div class="section">
+          <h2>相關論據</h2>
+          <div id="edit-arguments"></div>
+          <button id="add-argument-btn" class="btn btn-small">
+            + 新增事實
+          </button>
+        </div>
+
+        <div class="actions">
+          <button id="cancel-edit-btn" class="btn">取消</button>
+          <button id="save-edit-btn" class="btn btn-primary">儲存並分析</button>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button id="analyze-btn" class="btn btn-primary">真假 Meow 一下</button>
+        <button id="open-sidebar-btn" class="btn">開啟側邊欄</button>
+        <button id="open-settings-btn" class="btn">⚙️ 設定</button>
+      </div>
+    </div>
+    <script src="../js/config.js"></script>
+    <script src="../js/shared_ui_logic.js"></script>
+    <script type="module" src="../js/popup.js"></script>
+    <script src="../lib/purify.min.js"></script>
+  </body>
+</html>

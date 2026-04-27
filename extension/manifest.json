@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "真假 Meow 一下",
+  "version": "0.0.7",
+  "description": "分析新聞內容，辨識事實與觀點，並檢測安全網域、中國用語、疑美論、國防安全、公共衛生、經濟貿易",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "storage",
+    "sidePanel",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://www.googleapis.com/*",
+    "https://accounts.google.com/*",
+    "http://localhost:4999/*"
+  ],
+  "oauth2": {
+    "client_id": "YOUR_GOOGLE_OAUTH_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "options_page": "options/options.html",
+  "background": {
+    "service_worker": "js/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "ui/popup.html",
+    "default_title": "真假 Meow 一下",
+    "default_icon": {
+      "16": "assets/icon/icon_16.png",
+      "48": "assets/icon/icon_48.png",
+      "128": "assets/icon/icon_128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icon/icon_16.png",
+    "48": "assets/icon/icon_48.png",
+    "128": "assets/icon/icon_128.png"
+  },
+  "side_panel": {
+    "default_path": "ui/sidepanel.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "commands": {
+    "toggle-sidebar": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Toggle side panel open/close"
+    },
+    "analyze-news": {
+      "suggested_key": {
+        "default": "Alt+Shift+A"
+      },
+      "description": "Analyze Page Content"
+    }
+  }
+}

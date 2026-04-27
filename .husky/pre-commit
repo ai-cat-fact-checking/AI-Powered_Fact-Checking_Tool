@@ -1,0 +1,13 @@
+# Run lint-staged for staged files
+npx lint-staged
+
+# Validate docker-compose configuration
+echo "Validating docker-compose configuration..."
+docker-compose config --quiet
+
+if [ $? -ne 0 ]; then
+  echo "❌ docker-compose validation failed"
+  exit 1
+fi
+
+echo "✅ Pre-commit checks passed"

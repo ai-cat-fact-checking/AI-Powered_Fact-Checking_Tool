@@ -1,0 +1,57 @@
+# Environment files (NEVER commit real secrets)
+.env
+.env.local
+.env.*.local
+server/.env
+server/.env.production
+
+# OAuth credentials
+server/client_secret_*.json
+*googleusercontent.com.json
+
+# Local server config (track only the .example files)
+server/config/chinese_terms.json
+server/config/verified_domain.json
+server/config/find_arguments_opinions_prompt.txt
+
+# Node
+node_modules/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+.vim/
+.DS_Store
+
+# Python (legacy / utils)
+__pycache__/
+.venv/
+.venv_x86/
+
+# Build artefacts
+server/build/
+server/dist/
+server/*.spec
+release_files/
+extension.crx
+extension.pem
+*.pem
+
+# Generated extension packages
+extension-deploy/
+extension-deploy*.zip
+
+# Postgres / runtime data
+postgres/
+server/data/users.json
+
+# Logs
+logs/
+
+# Misc
+rw.*.dmg
+TAGS
+.TAGS
+tags
+.tags

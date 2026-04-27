@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>新聞事實查核</title>
+    <link rel="stylesheet" href="../css/sidepanel.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header bar - always visible with analysis buttons and settings -->
+      <div id="global-header-bar" class="header-bar global-header">
+        <div class="analysis-btn">
+          <button
+            id="analyze-btn"
+            class="btn btn-primary"
+            disabled
+            title="請先授權分析此頁面"
+          >
+            真假 Meow 一下
+          </button>
+          <button
+            id="stage3-analyze-btn"
+            class="btn btn-warning"
+            disabled
+            title="請先授權分析此頁面"
+          >
+            疑美論分析
+          </button>
+        </div>
+        <button id="open-settings-btn" class="btn-icon" title="設定">⚙️</button>
+      </div>
+
+      <div id="permission-prompt" class="permission-prompt hidden">
+        <p>
+          請點擊瀏覽器工具列中的擴充功能圖示
+          <img
+            src="../assets/icon-dark/dark_icon_48.png"
+            alt="icon"
+            class="inline-icon"
+          />
+          以授權分析此頁面。
+        </p>
+        <p>或者，在頁面上按右鍵，點擊「真假 Meow 一下」。</p>
+      </div>
+
+      <div id="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>喵查查．識讀任務中……</p>
+      </div>
+
+      <div id="error-message" class="error-message hidden"></div>
+
+      <div id="analysis-results" class="hidden">
+        <!-- Highlight Legend Section (Accordion) -->
+        <div
+          class="section accordion-section highlight-legend-section"
+          data-section="highlight-legend"
+        >
+          <div class="accordion-header">
+            <button class="accordion-toggle" type="button" aria-expanded="true">
+              <span class="accordion-title">🎨 標記說明</span>
+              <span class="accordion-indicator" aria-hidden="true">▾</span>
+            </button>
+          </div>
+          <div class="accordion-content">
+            <div class="highlight-legend-container">
+              <div class="legend-item">
+                <div class="legend-color legend-argument"></div>
+                <div class="legend-content">
+                  <div class="legend-label">綠色：論據</div>
+                  <div class="legend-description">
+                    新聞中的事實陳述、具體證據或資料
+                  </div>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color legend-opinion"></div>
+                <div class="legend-content">
+                  <div class="legend-label">藍色：觀點</div>
+                  <div class="legend-description">
+                    記者或媒體的分析、評論或意見表述
+                  </div>
+                </div>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color legend-chinese"></div>
+                <div class="legend-content">
+                  <div class="legend-label">粉紅色：中國用語</div>
+                  <div class="legend-description">含有中國用語的文字</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 3 Analysis Results Section (Accordion) -->
+        <div
+          id="stage3-results"
+          class="section accordion-section hidden"
+          data-section="stage3"
+        >
+          <div class="accordion-header">
+            <button class="accordion-toggle" type="button" aria-expanded="true">
+              <span class="accordion-title">疑美論分析結果</span>
+              <span class="accordion-indicator" aria-hidden="true">▾</span>
+            </button>
+          </div>
+          <div class="accordion-content">
+            <div class="stage3-suspicion-tags-row">
+              <div
+                id="stage3-suspicion-tags-container"
+                class="suspicion-tags-container"
+              >
+                <!-- 疑美論標籤將在此顯示 -->
+              </div>
+            </div>
+            <!-- Analysis Path Visualization -->
+            <div class="analysis-path stage3-late-block hidden">
+              <h3>分析路徑</h3>
+              <div id="analysis-steps" class="analysis-steps"></div>
+            </div>
+            <!-- Main Classification Result -->
+            <div class="classification-result stage3-late-block hidden">
+              <h3>分類結果</h3>
+              <div id="final-classification" class="classification-tag"></div>
+            </div>
+            <!-- Detected Tags -->
+            <div class="detected-tags-section stage3-late-block hidden">
+              <h3>偵測標籤</h3>
+              <div id="detected-tags-container" class="tags-container"></div>
+            </div>
+            <!-- Analysis Summary -->
+            <div class="analysis-summary stage3-late-block hidden">
+              <h3>分析說明</h3>
+              <div id="analysis-explanation" class="explanation-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="section credibility-section accordion-section"
+          data-section="assessment"
+        >
+          <div class="accordion-header">
+            <button class="accordion-toggle" type="button" aria-expanded="true">
+              <span class="accordion-title">綜合評估</span>
+              <span class="accordion-indicator" aria-hidden="true">▾</span>
+            </button>
+          </div>
+          <div class="accordion-content">
+            <div
+              id="popup-assessment"
+              class="assessment-indicator not-analyzed"
+            >
+              <span id="assessment-level-text">尚未評估</span>
+            </div>
+            <div
+              id="analysis-summary-stage1"
+              class="analysis-summary-stage1 hidden"
+            ></div>
+          </div>
+        </div>
+
+        <div class="section accordion-section" data-section="domain">
+          <div class="accordion-header">
+            <button class="accordion-toggle" type="button" aria-expanded="true">
+              <span class="accordion-title">網域認證</span>
+              <span class="accordion-indicator" aria-hidden="true">▾</span>
+            </button>
+          </div>
+          <div class="accordion-content">
+            <div class="domain-info-container">
+              <div class="domain-header">
+                <span id="domain-value">-</span>
+                <span id="domain-verified" class="tag verified hidden"
+                  >已驗證</span
+                >
+                <span id="domain-unverified" class="tag unverified hidden"
+                  >未驗證</span
+                >
+                <span id="domain-unknown" class="tag unknown hidden">未知</span>
+              </div>
+              <div id="domain-org-name" class="domain-org-name hidden"></div>
+              <div id="domain-summary" class="domain-summary hidden"></div>
+              <details id="domain-details" class="domain-details hidden">
+                <summary>顯示更多資訊</summary>
+                <div class="domain-details-content">
+                  <div
+                    id="domain-description"
+                    class="domain-description hidden"
+                  ></div>
+                  <div id="domain-meta" class="domain-meta hidden">
+                    <span id="domain-category" class="domain-tag"></span>
+                    <span id="domain-country" class="domain-tag"></span>
+                    <span
+                      id="domain-stance"
+                      class="domain-tag stance hidden"
+                    ></span>
+                  </div>
+                  <div
+                    id="domain-credibility-notes"
+                    class="domain-credibility-notes hidden"
+                  ></div>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div class="section accordion-section" data-section="opinions">
+          <div class="accordion-header">
+            <button class="accordion-toggle" type="button" aria-expanded="true">
+              <span class="accordion-title">記者/媒體觀點</span>
+              <span class="accordion-indicator" aria-hidden="true">▾</span>
+            </button>
+          </div>
+          <div class="accordion-content">
+            <div id="opinion-filters" class="opinion-filters hidden">
+              <button
+                type="button"
+                data-tag="全部"
+                class="opinion-options filter-btn active"
+              >
+                全部
+              </button>
+              <button
+                type="button"
+                data-tag="疑美論"
+                class="opinion-options filter-btn"
+              >
+                疑美論
+              </button>
+              <button
+                type="button"
+                data-tag="國防安全"
+                class="opinion-options filter-btn"
+              >
+                國防安全
+              </button>
+              <button
+                type="button"
+                data-tag="公共衛生"
+                class="opinion-options filter-btn"
+              >
+                公共衛生
+              </button>
+              <button
+                type="button"
+                data-tag="經濟貿易"
+                class="opinion-options filter-btn"
+              >
+                經濟貿易
+              </button>
+              <button
+                type="button"
+                data-tag="無論據佐證"
+                class="opinion-options filter-btn"
+              >
+                無論據佐證
+              </button>
+              <button
+                type="button"
+                data-tag="有論據佐證"
+                class="opinion-options filter-btn"
+              >
+                有論據佐證
+              </button>
+            </div>
+            <div id="opinions-container" class="tree-container"></div>
+          </div>
+        </div>
+
+        <div class="section accordion-section" data-section="arguments">
+          <div class="accordion-header">
+            <button class="accordion-toggle" type="button" aria-expanded="true">
+              <span class="accordion-title">相關論據</span>
+              <span class="accordion-indicator" aria-hidden="true">▾</span>
+            </button>
+          </div>
+          <div class="accordion-content">
+            <div id="arguments-container" class="tree-container"></div>
+          </div>
+        </div>
+
+        <div class="section accordion-section" data-section="chinese-terms">
+          <div class="accordion-header">
+            <button class="accordion-toggle" type="button" aria-expanded="true">
+              <span class="accordion-title">中國用語</span>
+              <span class="accordion-indicator" aria-hidden="true">▾</span>
+            </button>
+            <div class="info-wrapper">
+              <button
+                id="chinese-terms-info-btn"
+                class="btn icon-btn info-btn"
+                aria-label="中國用語資料授權說明"
+                title="中國用語資料授權說明"
+              >
+                i
+              </button>
+              <div
+                id="chinese-terms-tooltip"
+                role="tooltip"
+                class="tooltip hidden"
+              >
+                本工具由「台灣數位外交協會」開發；「中國用語」偵測功能使用中華文化總會之「中華語文知識庫」資料，並以取得
+                <strong>中華文化總會授權使用</strong
+                >。<br />授權僅限於本工具之媒體識讀與事實查核相關研究與應用，使用者不得將該資料庫內容另作其他用途。
+              </div>
+            </div>
+          </div>
+          <div class="accordion-content">
+            <div id="chinese-terms-container"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="modify-btn" class="btn">修改</button>
+          <button id="re-analyze-btn" class="btn btn-primary">進階分析</button>
+          <button id="open-report-btn" class="btn btn-secondary">
+            完整報告
+          </button>
+        </div>
+      </div>
+
+      <div id="edit-form" class="hidden">
+        <div class="section">
+          <h2>記者/媒體觀點</h2>
+          <div id="edit-opinions"></div>
+          <button id="add-opinion-btn" class="btn btn-small">+ 新增觀點</button>
+        </div>
+
+        <div class="section">
+          <h2>相關論據</h2>
+          <div id="edit-arguments"></div>
+          <button id="add-argument-btn" class="btn btn-small">
+            + 新增論據
+          </button>
+        </div>
+
+        <div class="actions">
+          <button id="cancel-edit-btn" class="btn">取消</button>
+          <button id="save-edit-btn" class="btn btn-primary">儲存並分析</button>
+        </div>
+      </div>
+
+      <div
+        id="comment-section"
+        class="section accordion-section hidden"
+        data-section="comments"
+      >
+        <div class="accordion-header">
+          <button class="accordion-toggle" type="button" aria-expanded="true">
+            <span class="accordion-title">留言討論</span>
+            <span class="accordion-indicator" aria-hidden="true">▾</span>
+          </button>
+        </div>
+        <div class="accordion-content">
+          <div id="comment" class="comment-section">
+            <div class="comment-toolbar">
+              <span id="user-display" class="user-display">尚未登入</span>
+              <button id="login-btn" class="btn btn-primary">登入</button>
+              <button id="logout-btn" class="btn hidden">登出</button>
+            </div>
+
+            <!-- Add tag filter buttons -->
+            <div id="comment-filters" class="comment-filters">
+              <button
+                type="button"
+                data-tag="全部"
+                class="comment-options filter-btn active"
+              >
+                全部
+              </button>
+              <button
+                type="button"
+                data-tag="疑美論"
+                class="comment-options filter-btn"
+              >
+                疑美論
+              </button>
+              <button
+                type="button"
+                data-tag="國防安全"
+                class="comment-options filter-btn"
+              >
+                國防安全
+              </button>
+              <button
+                type="button"
+                data-tag="公共衛生"
+                class="comment-options filter-btn"
+              >
+                公共衛生
+              </button>
+              <button
+                type="button"
+                data-tag="經濟貿易"
+                class="comment-options filter-btn"
+              >
+                經濟貿易
+              </button>
+              <button
+                type="button"
+                data-tag="無論據佐證"
+                class="comment-options filter-btn"
+              >
+                無論據佐證
+              </button>
+              <button
+                type="button"
+                data-tag="中國用語"
+                class="comment-options filter-btn"
+              >
+                中國用語
+              </button>
+            </div>
+
+            <div>
+              <!-- Comment list with all tags -->
+              <div class="comments-container">
+                <ul id="chat-list" class="chat-list"></ul>
+              </div>
+
+              <!-- Fixed comment compose area -->
+              <div class="chat-form-container">
+                <form id="chat-form" class="chat-form">
+                  <textarea
+                    id="chat-input"
+                    class="chat-input"
+                    rows="3"
+                    placeholder="登入後才能留言"
+                    disabled
+                    required
+                  ></textarea>
+                  <div class="tag-selector">
+                    <label for="comment-tag">選擇類別：</label>
+                    <select id="comment-tag" disabled>
+                      <option value="疑美論">疑美論</option>
+                      <option value="國防安全">國防安全</option>
+                      <option value="公共衛生">公共衛生</option>
+                      <option value="經濟貿易">經濟貿易</option>
+                      <option value="無論據佐證">無論據佐證</option>
+                      <option value="中國用語">中國用語</option>
+                    </select>
+                    <button type="submit" disabled>送出</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../js/config.js"></script>
+    <script src="../js/shared_ui_logic.js"></script>
+    <script type="module" src="../js/sidepanel.js"></script>
+    <script src="../lib/purify.min.js"></script>
+  </body>
+</html>

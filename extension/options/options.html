@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>真假 Meow 一下 - 設定</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>🔍 真假 Meow 一下設定</h1>
+        <p class="subtitle">配置您的帳號和 API 金鑰以開始使用事實查核功能</p>
+      </header>
+
+      <!-- Authentication Section -->
+      <section class="setup-section" id="auth-section">
+        <div class="section-header">
+          <h2>🔐 Google 帳號登入</h2>
+          <p class="help-text">請先登入 Google 帳號以安全儲存您的設定</p>
+        </div>
+
+        <div class="auth-container">
+          <div id="auth-status" class="auth-status">
+            <div id="logged-out-state" class="auth-state">
+              <p>請登入您的 Google 帳號</p>
+              <button id="login-btn" class="btn btn-primary">
+                <span>登入 Google</span>
+              </button>
+            </div>
+
+            <div id="logged-in-state" class="auth-state hidden">
+              <div class="user-info">
+                <div class="user-avatar">
+                  <img
+                    id="user-avatar"
+                    src=""
+                    alt="User Avatar"
+                    class="avatar"
+                  />
+                </div>
+                <div class="user-details">
+                  <p id="user-name" class="user-name"></p>
+                  <p id="user-email" class="user-email"></p>
+                </div>
+              </div>
+              <button id="logout-btn" class="btn btn-secondary">登出</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- API Key Configuration Section -->
+      <section class="setup-section" id="api-section">
+        <div class="section-header">
+          <h2>🔑 Gemini API Key 設定</h2>
+          <p class="help-text">
+            請至
+            <a
+              href="https://aistudio.google.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Google AI Studio
+            </a>
+            申請免費的 Gemini API Key
+          </p>
+        </div>
+
+        <div class="api-key-container">
+          <div class="form-group">
+            <label for="api-key" class="form-label">Gemini API Key：</label>
+            <div class="input-group">
+              <input
+                type="password"
+                id="api-key"
+                class="form-input"
+                placeholder="請輸入您的 Gemini API Key （以 AI 開頭）"
+                maxlength="200"
+              />
+              <button id="toggle-visibility" class="btn btn-icon" type="button">
+                <span id="visibility-icon">👁️</span>
+              </button>
+            </div>
+            <div class="input-hint">
+              <small>API Key 將以加密方式安全儲存，僅用於事實查核分析</small>
+            </div>
+          </div>
+
+          <div class="action-group">
+            <button id="save-api-key" class="btn btn-primary" disabled>
+              <span id="save-btn-text">儲存 API Key</span>
+              <div id="save-spinner" class="spinner hidden"></div>
+            </button>
+            <button id="test-api-key" class="btn btn-secondary" disabled>
+              測試連線
+            </button>
+          </div>
+
+          <div id="api-key-status" class="status-indicator">
+            <span id="api-status-text">請先登入並設定 API Key</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Advanced Settings Section -->
+      <!-- <section class="setup-section" id="advanced-section"> -->
+      <!-- <div class="section-header">
+          <h2>⚙️ 進階設定</h2>
+          <p class="help-text">自訂分析行為和快捷鍵設定</p>
+        </div>
+
+        <div class="settings-grid">
+          <div class="setting-item">
+            <label for="auto-analyze" class="setting-label">
+              <input
+                type="checkbox"
+                id="auto-analyze"
+                class="setting-checkbox"
+              />
+              <span>自動分析頁面內容</span>
+            </label>
+            <p class="setting-description">
+              在載入新聞頁面時自動執行事實查核分析
+            </p>
+          </div>
+
+          <div class="setting-item">
+            <label for="cache-results" class="setting-label">
+              <input
+                type="checkbox"
+                id="cache-results"
+                class="setting-checkbox"
+                checked
+              />
+              <span>快取分析結果</span>
+            </label>
+            <p class="setting-description">儲存分析結果以加快後續查詢速度</p>
+          </div> -->
+
+      <!-- <div class="setting-item">
+            <label for="show-notifications" class="setting-label">
+              <input
+                type="checkbox"
+                id="show-notifications"
+                class="setting-checkbox"
+                checked
+              />
+              <span>顯示通知</span>
+            </label>
+            <p class="setting-description">
+              在分析完成或發現重要資訊時顯示通知
+            </p>
+          </div>
+        </div> -->
+
+      <div class="keyboard-shortcuts">
+        <h3>鍵盤快速鍵</h3>
+        <div class="shortcuts-list">
+          <div class="shortcut-item">
+            <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>
+            <span>開啟/關閉側邊欄</span>
+          </div>
+          <div class="shortcut-item">
+            <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd>
+            <span>分析當前頁面</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Messages -->
+      <div id="status-message" class="status-message hidden">
+        <div class="status-content">
+          <span id="status-text"></span>
+          <button id="status-close" class="status-close">&times;</button>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <!-- <div class="footer-links">
+          <a
+            href="https://github.com/your-repo"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </div> -->
+        <p class="footer-text">© 2024 真假 Meow 一下 - AI 驅動的事實查核工具</p>
+      </footer>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>
